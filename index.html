@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navrasa Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9rem;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .rasa-selector {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: white;
+            font-family: inherit;
+        }
+        
+        .rasa-selector:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        .note-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .note-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+            padding-right: 30px;
+        }
+        
+        .note-meta {
+            font-size: 0.75rem;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+            padding-top: 0.5rem;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .counter {
+            text-align: center;
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .clear-all-btn {
+            padding: 0.4rem 1rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: background-color 0.2s;
+            display: inline-block;
+            width: auto;
+        }
+        
+        .clear-all-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .rasa-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .rasa-shringara { background-color: #e91e63; }
+        .rasa-hasya { background-color: #ff9800; }
+        .rasa-karuna { background-color: #2196f3; }
+        .rasa-raudra { background-color: #f44336; }
+        .rasa-veera { background-color: #4caf50; }
+        .rasa-bhayanaka { background-color: #9c27b0; }
+        .rasa-bibhatsa { background-color: #795548; }
+        .rasa-adbhuta { background-color: #ffeb3b; color: #333; }
+        .rasa-shanta { background-color: #607d8b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Navrasa Notes</h1>
+            <p class="subtitle">Tag each note with one of the nine classical emotions</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('add')">Add Note</button>
+            <button class="tab" onclick="showTab('list')">View List</button>
+        </div>
+        
+        <!-- Add Note Tab -->
+        <div id="add-tab" class="tab-content active">
+            <select id="rasaSelector" class="rasa-selector">
+                <option value="">Select an emotion for your note</option>
+                <option value="shringara">Shringara - Love/Romance</option>
+                <option value="hasya">Hasya - Laughter/Joy</option>
+                <option value="karuna">Karuna - Compassion/Sorrow</option>
+                <option value="raudra">Raudra - Anger/Fury</option>
+                <option value="veera">Veera - Heroism/Courage</option>
+                <option value="bhayanaka">Bhayanaka - Fear/Terror</option>
+                <option value="bibhatsa">Bibhatsa - Disgust/Aversion</option>
+                <option value="adbhuta">Adbhuta - Wonder/Amazement</option>
+                <option value="shanta">Shanta - Peace/Tranquility</option>
+            </select>
+            
+            <textarea 
+                id="noteInput" 
+                class="text-input" 
+                placeholder="Type your note here..."></textarea>
+            
+            <button onclick="addNote()" class="add-btn" id="addBtn">
+                Add to List
+            </button>
+            
+            <div id="successMessage" class="success-message">
+                Note added successfully! ✓
+            </div>
+            
+            <div class="counter" id="counter">
+                Total notes: 0
+            </div>
+        </div>
+        
+        <!-- List Tab -->
+        <div id="list-tab" class="tab-content">
+            <button onclick="clearAllNotes()" class="clear-all-btn" id="clearBtn">Clear All</button>
+            <div id="notesContainer">
+                <!-- Notes will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem('navrasaNotes') || '[]');
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'list') {
+                loadNotes();
+            }
+        }
+        
+        function addNote() {
+            const input = document.getElementById('noteInput');
+            const rasaSelector = document.getElementById('rasaSelector');
+            const text = input.value.trim();
+            const selectedRasa = rasaSelector.value;
+            
+            if (text === '') {
+                alert('Please type something before adding!');
+                return;
+            }
+            
+            if (selectedRasa === '') {
+                alert('Please select an emotion for your note!');
+                return;
+            }
+            
+            const newNote = {
+                text: text,
+                rasa: selectedRasa,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString(),
+                id: Date.now()
+            };
+            
+            notes.push(newNote);
+            saveNotes();
+            
+            input.value = '';
+            rasaSelector.value = '';
+            
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2000);
+            
+            updateCounter();
+        }
+        
+        function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            
+            if (notes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        No notes yet! Go to "Add Note" tab to create your first note.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            [...notes].reverse().forEach((note) => {
+                const rasaTag = `<div class="rasa-tag rasa-${note.rasa}">${getRasaDisplay(note.rasa)}</div>`;
+                
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-item';
+                noteElement.innerHTML = `
+                    <button onclick="deleteNote(${note.id})" class="delete-btn">×</button>
+                    ${rasaTag}
+                    <div class="note-text">${escapeHtml(note.text)}</div>
+                    <div class="note-meta">Added on ${note.date} at ${note.time}</div>
+                `;
+                container.appendChild(noteElement);
+            });
+        }
+        
+        function getRasaDisplay(rasa) {
+            const rasaNames = {
+                'shringara': 'Shringara (Love)',
+                'hasya': 'Hasya (Laughter)',
+                'karuna': 'Karuna (Compassion)',
+                'raudra': 'Raudra (Anger)',
+                'veera': 'Veera (Heroism)',
+                'bhayanaka': 'Bhayanaka (Fear)',
+                'bibhatsa': 'Bibhatsa (Disgust)',
+                'adbhuta': 'Adbhuta (Wonder)',
+                'shanta': 'Shanta (Peace)'
+            };
+            return rasaNames[rasa] || rasa;
+        }
+        
+        function deleteNote(id) {
+            notes = notes.filter(note => note.id !== id);
+            saveNotes();
+            loadNotes();
+            updateCounter();
+        }
+        
+        function clearAllNotes() {
+            if (notes.length === 0) {
+                return;
+            }
+            
+            notes.length = 0;
+            saveNotes();
+            
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    No notes yet! Go to "Add Note" tab to create your first note.
+                </div>
+            `;
+            
+            updateCounter();
+        }
+        
+        function saveNotes() {
+            localStorage.setItem('navrasaNotes', JSON.stringify(notes));
+        }
+        
+        function updateCounter() {
+            const count = notes.length;
+            const counterText = `Total notes: ${count}`;
+            
+            const addTabCounter = document.getElementById('counter');
+            if (addTabCounter) {
+                addTabCounter.textContent = counterText;
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('noteInput').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                addNote();
+            }
+        });
+        
+        updateCounter();
+    </script>
+</body>
+</html>
