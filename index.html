@@ -1,467 +1,441 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2299.77">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navrasa Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9rem;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .rasa-selector {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: white;
+            font-family: inherit;
+        }
+        
+        .rasa-selector:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+        
+        .note-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .note-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+            padding-right: 30px;
+        }
+        
+        .note-meta {
+            font-size: 0.75rem;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+            padding-top: 0.5rem;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .counter {
+            text-align: center;
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .clear-all-btn {
+            padding: 0.4rem 1rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: background-color 0.2s;
+            display: inline-block;
+            width: auto;
+        }
+        
+        .clear-all-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .rasa-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .rasa-shringara { background-color: #e91e63; }
+        .rasa-hasya { background-color: #ff9800; }
+        .rasa-karuna { background-color: #2196f3; }
+        .rasa-raudra { background-color: #f44336; }
+        .rasa-veera { background-color: #4caf50; }
+        .rasa-bhayanaka { background-color: #9c27b0; }
+        .rasa-bibhatsa { background-color: #795548; }
+        .rasa-adbhuta { background-color: #ffeb3b; color: #333; }
+        .rasa-shanta { background-color: #607d8b; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Navrasa Notes&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>* {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f5f5f5;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 2px 10px rgba(0,0,0,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.header {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.title {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.8rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.subtitle {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tabs {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid #eee;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 2px solid transparent;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab.active {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #007bff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom-color: #007bff;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab-content {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.tab-content.active {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-selector {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid #ddd;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-selector:focus {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: #007bff;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.text-input {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid #ddd;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>resize: vertical;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>min-height: 80px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.text-input:focus {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: #007bff;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.add-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #28a745;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: background-color 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.add-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #218838;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.success-message {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #d4edda;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #155724;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.note-item {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f8f9fa;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #dee2e6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.note-text {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.95rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.4;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>word-wrap: break-word;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-right: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.note-meta {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-top: 1px solid #dee2e6;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-top: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.delete-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>top: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>right: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #dc3545;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 3px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.8rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.delete-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #c82333;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.empty-state {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-style: italic;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 2rem 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.counter {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.85rem;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.clear-all-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.4rem 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #dc3545;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.8rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: background-color 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: auto;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.clear-all-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: #c82333;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-tag {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 0.25rem 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-shringara { background-color: #e91e63; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-hasya { background-color: #ff9800; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-karuna { background-color: #2196f3; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-raudra { background-color: #f44336; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-veera { background-color: #4caf50; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-bhayanaka { background-color: #9c27b0; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-bibhatsa { background-color: #795548; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-adbhuta { background-color: #ffeb3b; color: #333; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.rasa-shanta { background-color: #607d8b; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="title"&gt;Navrasa Notes&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="subtitle"&gt;Tag each note with one of the nine classical emotions&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tabs"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="tab active" onclick="showTab('add')"&gt;Add Note&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="tab" onclick="showTab('list')"&gt;View List&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Add Note Tab --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="add-tab" class="tab-content active"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;select id="rasaSelector" class="rasa-selector"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value=""&gt;Select an emotion for your note&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="shringara"&gt;Shringara - Love/Romance&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="hasya"&gt;Hasya - Laughter/Joy&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="karuna"&gt;Karuna - Compassion/Sorrow&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="raudra"&gt;Raudra - Anger/Fury&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="veera"&gt;Veera - Heroism/Courage&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="bhayanaka"&gt;Bhayanaka - Fear/Terror&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="bibhatsa"&gt;Bibhatsa - Disgust/Aversion&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="adbhuta"&gt;Adbhuta - Wonder/Amazement&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="shanta"&gt;Shanta - Peace/Tranquility&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;textarea<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>id="noteInput"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>class="text-input"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>placeholder="Type your note here..."&gt;&lt;/textarea&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="addNote()" class="add-btn" id="addBtn"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>Add to List</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="successMessage" class="success-message"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>Note added successfully! ✓</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="counter" id="counter"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>Total notes: 0</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- List Tab --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="list-tab" class="tab-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="clearAllNotes()" class="clear-all-btn" id="clearBtn"&gt;Clear All&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="notesContainer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Notes will appear here --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let notes = JSON.parse(localStorage.getItem('navrasaNotes') || '[]');</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function showTab(tabName) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Hide all tabs</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.tab-content').forEach(content =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>content.classList.remove('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.tab').forEach(tab =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>tab.classList.remove('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Show selected tab</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById(tabName + '-tab').classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>event.target.classList.add('active');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (tabName === 'list') {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>loadNotes();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function addNote() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const input = document.getElementById('noteInput');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const rasaSelector = document.getElementById('rasaSelector');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const text = input.value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const selectedRasa = rasaSelector.value;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (text === '') {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>alert('Please type something before adding!');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (selectedRasa === '') {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>alert('Please select an emotion for your note!');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const newNote = {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>text: text,</p>
-<p class="p1"><span class="Apple-converted-space">                </span>rasa: selectedRasa,</p>
-<p class="p1"><span class="Apple-converted-space">                </span>date: new Date().toLocaleDateString(),</p>
-<p class="p1"><span class="Apple-converted-space">                </span>time: new Date().toLocaleTimeString(),</p>
-<p class="p1"><span class="Apple-converted-space">                </span>id: Date.now()</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>notes.push(newNote);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>saveNotes();</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Clear inputs</p>
-<p class="p1"><span class="Apple-converted-space">            </span>input.value = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>rasaSelector.value = '';</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Show success message</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const successMsg = document.getElementById('successMessage');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>successMsg.style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>successMsg.style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}, 2000);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Update counter</p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateCounter();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function loadNotes() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('notesContainer');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (notes.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>container.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="empty-state"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>No notes yet! Go to "Add Note" tab to create your first note.</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Show newest notes first</p>
-<p class="p1"><span class="Apple-converted-space">            </span>[...notes].reverse().forEach((note) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const rasaTag = `&lt;div class="rasa-tag rasa-${note.rasa}"&gt;${getRasaDisplay(note.rasa)}&lt;/div&gt;`;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>const noteElement = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>noteElement.className = 'note-item';</p>
-<p class="p1"><span class="Apple-converted-space">                </span>noteElement.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;button onclick="deleteNote(${note.id})" class="delete-btn"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>${rasaTag}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="note-text"&gt;${escapeHtml(note.text)}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="note-meta"&gt;Added on ${note.date} at ${note.time}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>container.appendChild(noteElement);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function getRasaDisplay(rasa) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const rasaNames = {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'shringara': 'Shringara (Love)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'hasya': 'Hasya (Laughter)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'karuna': 'Karuna (Compassion)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'raudra': 'Raudra (Anger)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'veera': 'Veera (Heroism)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'bhayanaka': 'Bhayanaka (Fear)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'bibhatsa': 'Bibhatsa (Disgust)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'adbhuta': 'Adbhuta (Wonder)',</p>
-<p class="p1"><span class="Apple-converted-space">                </span>'shanta': 'Shanta (Peace)'</p>
-<p class="p1"><span class="Apple-converted-space">            </span>};</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return rasaNames[rasa] || rasa;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function deleteNote(id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const oldLength = notes.length;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>notes = notes.filter(note =&gt; note.id !== id);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>saveNotes();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>loadNotes();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateCounter();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function clearAllNotes() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (notes.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>notes.length = 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>saveNotes();</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('notesContainer');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="empty-state"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>No notes yet! Go to "Add Note" tab to create your first note.</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>updateCounter();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function saveNotes() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>localStorage.setItem('navrasaNotes', JSON.stringify(notes));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function updateCounter() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const count = notes.length;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const counterText = `Total notes: ${count}`;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const addTabCounter = document.getElementById('counter');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (addTabCounter) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>addTabCounter.textContent = counterText;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function escapeHtml(text) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const div = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>div.textContent = text;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return div.innerHTML;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Add note with Ctrl+Enter</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('noteInput').addEventListener('keydown', function(e) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if ((e.ctrlKey || e.metaKey) &amp;&amp; e.key === 'Enter') {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>addNote();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Initialize</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateCounter();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Navrasa Notes</h1>
+            <p class="subtitle">Tag each note with one of the nine classical emotions</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('add')">Add Note</button>
+            <button class="tab" onclick="showTab('list')">View List</button>
+        </div>
+        
+        <!-- Add Note Tab -->
+        <div id="add-tab" class="tab-content active">
+            <select id="rasaSelector" class="rasa-selector">
+                <option value="">Select an emotion for your note</option>
+                <option value="shringara">Shringara - Love/Romance</option>
+                <option value="hasya">Hasya - Laughter/Joy</option>
+                <option value="karuna">Karuna - Compassion/Sorrow</option>
+                <option value="raudra">Raudra - Anger/Fury</option>
+                <option value="veera">Veera - Heroism/Courage</option>
+                <option value="bhayanaka">Bhayanaka - Fear/Terror</option>
+                <option value="bibhatsa">Bibhatsa - Disgust/Aversion</option>
+                <option value="adbhuta">Adbhuta - Wonder/Amazement</option>
+                <option value="shanta">Shanta - Peace/Tranquility</option>
+            </select>
+            
+            <textarea 
+                id="noteInput" 
+                class="text-input" 
+                placeholder="Type your note here..."></textarea>
+            
+            <button onclick="addNote()" class="add-btn" id="addBtn">
+                Add to List
+            </button>
+            
+            <div id="successMessage" class="success-message">
+                Note added successfully! ✓
+            </div>
+            
+            <div class="counter" id="counter">
+                Total notes: 0
+            </div>
+        </div>
+        
+        <!-- List Tab -->
+        <div id="list-tab" class="tab-content">
+            <button onclick="clearAllNotes()" class="clear-all-btn" id="clearBtn">Clear All</button>
+            <div id="notesContainer">
+                <!-- Notes will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem('navrasaNotes') || '[]');
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'list') {
+                loadNotes();
+            }
+        }
+        
+        function addNote() {
+            const input = document.getElementById('noteInput');
+            const rasaSelector = document.getElementById('rasaSelector');
+            const text = input.value.trim();
+            const selectedRasa = rasaSelector.value;
+            
+            if (text === '') {
+                alert('Please type something before adding!');
+                return;
+            }
+            
+            if (selectedRasa === '') {
+                alert('Please select an emotion for your note!');
+                return;
+            }
+            
+            const newNote = {
+                text: text,
+                rasa: selectedRasa,
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString(),
+                id: Date.now()
+            };
+            
+            notes.push(newNote);
+            saveNotes();
+            
+            input.value = '';
+            rasaSelector.value = '';
+            
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 2000);
+            
+            updateCounter();
+        }
+        
+        function loadNotes() {
+            const container = document.getElementById('notesContainer');
+            
+            if (notes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        No notes yet! Go to "Add Note" tab to create your first note.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            [...notes].reverse().forEach((note) => {
+                const rasaTag = `<div class="rasa-tag rasa-${note.rasa}">${getRasaDisplay(note.rasa)}</div>`;
+                
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-item';
+                noteElement.innerHTML = `
+                    <button onclick="deleteNote(${note.id})" class="delete-btn">×</button>
+                    ${rasaTag}
+                    <div class="note-text">${escapeHtml(note.text)}</div>
+                    <div class="note-meta">Added on ${note.date} at ${note.time}</div>
+                `;
+                container.appendChild(noteElement);
+            });
+        }
+        
+        function getRasaDisplay(rasa) {
+            const rasaNames = {
+                'shringara': 'Shringara (Love)',
+                'hasya': 'Hasya (Laughter)',
+                'karuna': 'Karuna (Compassion)',
+                'raudra': 'Raudra (Anger)',
+                'veera': 'Veera (Heroism)',
+                'bhayanaka': 'Bhayanaka (Fear)',
+                'bibhatsa': 'Bibhatsa (Disgust)',
+                'adbhuta': 'Adbhuta (Wonder)',
+                'shanta': 'Shanta (Peace)'
+            };
+            return rasaNames[rasa] || rasa;
+        }
+        
+        function deleteNote(id) {
+            notes = notes.filter(note => note.id !== id);
+            saveNotes();
+            loadNotes();
+            updateCounter();
+        }
+        
+        function clearAllNotes() {
+            if (notes.length === 0) {
+                return;
+            }
+            
+            notes.length = 0;
+            saveNotes();
+            
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = `
+                <div class="empty-state">
+                    No notes yet! Go to "Add Note" tab to create your first note.
+                </div>
+            `;
+            
+            updateCounter();
+        }
+        
+        function saveNotes() {
+            localStorage.setItem('navrasaNotes', JSON.stringify(notes));
+        }
+        
+        function updateCounter() {
+            const count = notes.length;
+            const counterText = `Total notes: ${count}`;
+            
+            const addTabCounter = document.getElementById('counter');
+            if (addTabCounter) {
+                addTabCounter.textContent = counterText;
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('noteInput').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                addNote();
+            }
+        });
+        
+        updateCounter();
+    </script>
 </body>
 </html>
